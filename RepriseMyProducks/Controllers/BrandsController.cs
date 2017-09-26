@@ -17,7 +17,7 @@ namespace RepriseMyProducks.Controllers
         // GET: Brands
         public ActionResult Index()
         {
-            return View(db.Brands.ToList());
+            return View(db.Brands.Where(s => s.Active).ToList());
         }
 
         // GET: Brands/Details/5
@@ -50,6 +50,7 @@ namespace RepriseMyProducks.Controllers
         {
             if (ModelState.IsValid)
             {
+                brand.Active = true;
                 db.Brands.Add(brand);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -110,7 +111,8 @@ namespace RepriseMyProducks.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Brand brand = db.Brands.Find(id);
-            db.Brands.Remove(brand);
+            brand.Active = false;
+            db.Entry(brand).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

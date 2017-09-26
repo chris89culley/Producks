@@ -17,7 +17,7 @@ namespace RepriseMyProducks.Controllers
         // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            return View(db.Categories.Where(s => s.Active).ToList());
         }
 
         // GET: Categories/Details/5
@@ -48,6 +48,7 @@ namespace RepriseMyProducks.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Description,Active")] Category category)
         {
+            category.Active = true;
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
@@ -78,8 +79,9 @@ namespace RepriseMyProducks.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,Active")] Category category)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description")] Category category)
         {
+            category.Active = true;
             if (ModelState.IsValid)
             {
                 db.Entry(category).State = EntityState.Modified;
@@ -110,7 +112,8 @@ namespace RepriseMyProducks.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
+            category.Active = false;
+            db.Entry(category).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }

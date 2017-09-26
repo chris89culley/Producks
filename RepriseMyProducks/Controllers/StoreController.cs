@@ -10,12 +10,13 @@ namespace RepriseMyProducks.Controllers
 {
     public class StoreController : Controller
     {
-
+        
         private StoreDb db = new StoreDb();
         // GET: Store
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            //We still want to show categories that are 'not active' that still have products in the store
+            return View(db.Categories.Where(c => db.Products.FirstOrDefault(s => s.Category.Id == c.Id && s.Active) != null).ToList()); 
         }
 
         public ActionResult Display(int? id)

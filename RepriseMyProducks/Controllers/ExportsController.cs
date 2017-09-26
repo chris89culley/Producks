@@ -26,7 +26,7 @@ namespace RepriseMyProducks.Controllers
                      {
                         Id = b.Id,
                         Name = b.Name,
-                        Active = b.Active
+
                      });
         }
         
@@ -34,7 +34,7 @@ namespace RepriseMyProducks.Controllers
         [Route("api/Products")]
         public IEnumerable<Dtos.Product> getProducts( int? price = null, String cat = null, String brand = null)
         {
-            return db.Products.AsEnumerable()
+            return db.Products.AsEnumerable().Where(x => x.Active)
                     .Select(b => new Dtos.Product
                     {
                         Id = b.Id,
@@ -44,7 +44,6 @@ namespace RepriseMyProducks.Controllers
                         Description = b.Description,
                         Price = b.Price,
                         StockLevel = b.StockLevel,
-                        Active = b.Active,
                         Category = b.Category.Name,
                         Brand = b.Brand.Name
 
@@ -56,10 +55,9 @@ namespace RepriseMyProducks.Controllers
         [Route("api/Category")]
         public IEnumerable<Dtos.Category> getCategorys()
         {
-            return db.Categories.AsEnumerable()
+            return db.Categories.AsEnumerable().Where(s => s.Active)
                 .Select(c => new Dtos.Category
                 {
-                    Active = c.Active,
                     Description = c.Description,
                     Id = c.Id,
                     Name = c.Name

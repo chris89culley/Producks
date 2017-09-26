@@ -18,7 +18,7 @@ namespace RepriseMyProducks.Controllers
         public ActionResult Index()
         {
             var products = db.Products.Include(p => p.Brand).Include(p => p.Category);
-            return View(products.ToList());
+            return View(products.Where(p => p.Active).ToList());
         }
 
         // GET: Products/Details/5
@@ -39,8 +39,8 @@ namespace RepriseMyProducks.Controllers
         // GET: Products/Create
         public ActionResult Create()
         {
-            ViewBag.BrandId = new SelectList(db.Brands, "Id", "Name");
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name");
+            ViewBag.BrandId = new SelectList(db.Brands.Where(b => b.Active), "Id", "Name");
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c => c.Active), "Id", "Name");
             
             return View();
         }
@@ -50,8 +50,9 @@ namespace RepriseMyProducks.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,CategoryId,BrandId,Name,Description,Price,StockLevel,Active")] Product product)
+        public ActionResult Create([Bind(Include = "Id,CategoryId,BrandId,Name,Description,Price,StockLevel")] Product product)
         {
+            product.Active = true;
             if (ModelState.IsValid)
             {
                 db.Products.Add(product);
@@ -59,8 +60,8 @@ namespace RepriseMyProducks.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BrandId = new SelectList(db.Brands, "Id", "Name", product.BrandId);
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", product.CategoryId);
+             ViewBag.BrandId = new SelectList(db.Brands.Where(d => d.Active), "Id", "Name", product.BrandId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c => c.Active), "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -76,8 +77,8 @@ namespace RepriseMyProducks.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.BrandId = new SelectList(db.Brands, "Id", "Name", product.BrandId);
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", product.CategoryId);
+            ViewBag.BrandId = new SelectList(db.Brands.Where(d => d.Active), "Id", "Name", product.BrandId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c => c.Active), "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -86,16 +87,17 @@ namespace RepriseMyProducks.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,CategoryId,BrandId,Name,Description,Price,StockLevel,Active")] Product product)
+        public ActionResult Edit([Bind(Include = "Id,CategoryId,BrandId,Name,Description,Price,StockLevel")] Product product)
         {
+            product.Active = true;
             if (ModelState.IsValid)
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.BrandId = new SelectList(db.Brands, "Id", "Name", product.BrandId);
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", product.CategoryId);
+            ViewBag.BrandId = new SelectList(db.Brands.Where(d => d.Active), "Id", "Name", product.BrandId);
+            ViewBag.CategoryId = new SelectList(db.Categories.Where(c => c.Active), "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -120,7 +122,8 @@ namespace RepriseMyProducks.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Product product = db.Products.Find(id);
-            db.Products.Remove(product);
+            product.Active = false;
+            db.Entry(product).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
