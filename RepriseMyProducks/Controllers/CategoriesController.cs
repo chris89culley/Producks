@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Producks.Model;
+using RepriseMyProducks.Models;
 
 namespace RepriseMyProducks.Controllers
 {
@@ -17,7 +18,10 @@ namespace RepriseMyProducks.Controllers
         // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Categories.Where(s => s.Active).ToList());
+            return View(db.Categories.Where(s => s.Active).Select(x => new CategoryVm {
+            Description = x.Description,
+            Id  = x.Id,
+            Name = x.Name}));
         }
 
         // GET: Categories/Details/5
@@ -32,7 +36,10 @@ namespace RepriseMyProducks.Controllers
             {
                 return HttpNotFound();
             }
-            return View(category);
+            return View(new CategoryVm {
+             Description=  category.Description,
+            Id  = category.Id,
+            Name = category.Name});
         }
 
         // GET: Categories/Create

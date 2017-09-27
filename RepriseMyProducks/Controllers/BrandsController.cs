@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Producks.Model;
+using RepriseMyProducks.Models;
 
 namespace RepriseMyProducks.Controllers
 {
@@ -17,7 +18,10 @@ namespace RepriseMyProducks.Controllers
         // GET: Brands
         public ActionResult Index()
         {
-            return View(db.Brands.Where(s => s.Active).ToList());
+            return View(db.Brands.Where(s => s.Active).Select(x => new BrandVm {
+                Id = x.Id,
+                Name = x.Name
+            }));
         }
 
         // GET: Brands/Details/5
@@ -32,7 +36,10 @@ namespace RepriseMyProducks.Controllers
             {
                 return HttpNotFound();
             }
-            return View(brand);
+            return View(new BrandVm {
+                Name = brand.Name,
+                Id = brand.Id
+            });
         }
 
         // GET: Brands/Create
@@ -79,8 +86,10 @@ namespace RepriseMyProducks.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Active")] Brand brand)
+        public ActionResult Edit([Bind(Include = "Id,Name")] Brand brand)
+
         {
+            brand.Active = true;
             if (ModelState.IsValid)
             {
                 db.Entry(brand).State = EntityState.Modified;

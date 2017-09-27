@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Producks.Model;
+using RepriseMyProducks.ViewModels;
 
 namespace RepriseMyProducks.Controllers
 {
@@ -18,7 +19,16 @@ namespace RepriseMyProducks.Controllers
         public ActionResult Index()
         {
             var products = db.Products.Include(p => p.Brand).Include(p => p.Category);
-            return View(products.Where(p => p.Active).ToList());
+            return View(products.Where(p => p.Active).Select(x => new ProductVm
+            {
+                Name = x.Name,
+                Id = x.Id,
+                Brand = x.Brand.Name,
+                Category = x.Category.Name,
+                Description = x.Description,
+                Price = x.Price,
+                StockLevel = x.StockLevel
+            }));
         }
 
         // GET: Products/Details/5
@@ -33,7 +43,20 @@ namespace RepriseMyProducks.Controllers
             {
                 return HttpNotFound();
             }
-            return View(product);
+
+            ProductVm productvm = new ProductVm
+            {
+                Brand = product.Brand.Name,
+                Category = product.Category.Name,
+                Description = product.Description,
+                Price = product.Price,
+                StockLevel = product.StockLevel,
+                Name = product.Name,
+                Id = product.Id
+            };
+
+
+            return View(productvm);
         }
 
         // GET: Products/Create
@@ -68,6 +91,7 @@ namespace RepriseMyProducks.Controllers
         // GET: Products/Edit/5
         public ActionResult Edit(int? id)
         {
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

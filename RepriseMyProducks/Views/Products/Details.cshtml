@@ -1,4 +1,4 @@
-﻿@model Producks.Model.Product
+﻿@model RepriseMyProducks.ViewModels.ProductVm
 
 @{
     ViewBag.Title = "Details";
@@ -7,25 +7,9 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Product</h4>
+    <h4>ProductVm</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Brand.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Brand.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Category.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Category.Name)
-        </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -51,13 +35,28 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.StockLevel)
+            @Html.DisplayNameFor(model => model.StockStatus)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.StockLevel)
+            @Html.DisplayFor(model => model.StockStatus)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.Category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Brand)
+        </dd>
 
     </dl>
 </div>

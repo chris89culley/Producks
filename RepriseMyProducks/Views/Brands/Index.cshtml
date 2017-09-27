@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Producks.Model.Brand>
+﻿@model IEnumerable<RepriseMyProducks.Models.BrandVm>
 
 @{
     ViewBag.Title = "Index";
@@ -22,7 +22,6 @@
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
-
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |

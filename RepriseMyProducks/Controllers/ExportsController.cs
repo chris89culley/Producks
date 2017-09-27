@@ -32,7 +32,7 @@ namespace RepriseMyProducks.Controllers
         
         [HttpGet]
         [Route("api/Products")]
-        public IEnumerable<Dtos.Product> getProducts( int? price = null, String cat = null, String brand = null)
+        public IEnumerable<Dtos.Product> GetProducts( int? price = null, String cat = null, String brand = null)
         {
             return db.Products.AsEnumerable().Where(x => x.Active)
                     .Select(b => new Dtos.Product
@@ -53,7 +53,7 @@ namespace RepriseMyProducks.Controllers
 
         [HttpGet]
         [Route("api/Category")]
-        public IEnumerable<Dtos.Category> getCategorys()
+        public IEnumerable<Dtos.Category> GetCategorys()
         {
             return db.Categories.AsEnumerable().Where(s => s.Active)
                 .Select(c => new Dtos.Category
